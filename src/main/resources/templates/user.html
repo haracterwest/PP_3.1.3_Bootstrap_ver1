@@ -1,38 +1,44 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<html lang="en">
+
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="UTF-8">
+    <title>Пользователь</title>
+
+    СТРАНИЦА ПОЛЬЗОВАТЕЛЯ
+    <style>
+        ul{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
+<br/>
+<br/>
+<li>ID пользователя:    <div th:utext ="${user.getId()}">...</div></li>
+<br/>
+<br/>
+<li>Имя пользователя:    <div th:utext ="${user.getName()}">...</div></li>
+<br/>
+<br/>
+<li>e-mail:    <div th:utext ="${user.getEmail()}">...</div></li>
+<br/>
+<br/>
 
-<div th:switch="${users}">
-    <h2 th:case="null">No users found!</h2>
-    <div th:case="*">
-        <h2>Users</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>e-mail</th>
-                <th>Address</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${users}">
-                <td th:text="${user.id}"></td>
-                <td th:text="${user.name}"></td>
-                <td th:text="${user.email}"></td>
-                <td th:text="${user.address}"></td>
-                <td><a th:href="@{user-update/{id}(id=${user.id})}">Edit</a></td>
-                <td><a th:href="@{user-delete/{id}(id=${user.id})}">Delete</a> </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <p><a href="/user-create">Create user</a> </p>
-</div>
+<br/>
+<br/>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="ВЫХОД" />
+</form>
 
+</ul>
 </body>
 </html>
+

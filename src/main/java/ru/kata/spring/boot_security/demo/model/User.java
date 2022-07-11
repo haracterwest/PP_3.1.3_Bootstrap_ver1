@@ -10,6 +10,19 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
+/** @Data - на этапе компиляции сгенерирует геттеры\сеттеры для всех полей, toString и переопределит equals и hashCode;
+ *  @Table - указывает на имя таблицы, которая будет отображаться в этой сущности, указывается над классом;
+ *  @Id - аннотация, оопределяющая primary key в entity bean;
+ *  @Column - аннотация, которая используется для определения соответствия между атрибутами в классе сущности и полями в таблице данных;
+ *  @GeneratedValue - задает стратегию создания основных ключей;
+ *  @ManyToMany - связь многие ко многим;
+ *  @JoinTable - указывает на связь с таблицей;
+ *  @JoinColumn - применяется, когда внешний ключ находится в одной из сущностей. Может применяться с обеих сторон взаимосвязи;
+ *  @Override - перед объявлением метода означает, что метод переопределяет объявление метода в базовом классе;
+ */
+
+
 @Data
 @Entity
 @Table(name = "users")
@@ -25,10 +38,10 @@ public class User implements UserDetails {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "address")
-    private String address;
+    @Column(name = "password")
+    private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -46,12 +59,12 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return name;
     }
 
     @Override

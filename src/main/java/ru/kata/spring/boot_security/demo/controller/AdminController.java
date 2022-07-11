@@ -7,8 +7,16 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.security.Principal;
 import java.util.List;
+
+/**
+ * @Controller - аннотация для маркировки java класса, как класса контроллера;
+ * @RequestMapping - используется для маппинга урл-адреса запроса на указанный метод или класс;
+ * @GetMapping - используется для обработки get-запроса;
+ * @PostMapping - используется для обработки post-запроса;
+ * @PatchMapping - используется для обновления ресурсов;
+ * @DeleteMapping - Обрабатывает delete-запросы
+ */
 
 @Controller
 @RequestMapping("/admin")
@@ -21,21 +29,18 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-//    @GetMapping()
-//    public String index(Model model, Principal principal) {
-//        List<User> users = userService.findAll();
-//        String username = principal.getName();
-//        User user = userService.getUserByName(username);
-//        model.addAttribute("users", users);
-//        model.addAttribute("user", user);
-//        model.addAttribute("allroles", roleService.getRoleSet());
-//        return "admin";
-//    }
+    @GetMapping()
+    public String getAllUsers(Model model) {
+        List<User> users = userService.findAll();
+        model.addAttribute("users", users);
+        return "admin";
+    }
 
-    @GetMapping("/admin")
+    @GetMapping("/new")
     public String addUser(Model model) {
         model.addAttribute("user", new User());
-        return "admin";
+        model.addAttribute("allroles", roleService.getRoles());
+        return "admin/user-create";
     }
 
     @PostMapping()
@@ -47,12 +52,15 @@ public class AdminController {
     @GetMapping(value = "/{id}/edit")
     public String edit(Model model, @PathVariable("id") Long id) {
         model.addAttribute("user", userService.findById(id));
-        return "admin";
+        return "admin/user-edit";
     }
 
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
-        userService.saveUser(user);
+        User newU = userService.findById(id);
+
+        userService.updateUser(user, newU);
+
         return "redirect:/admin";
     }
 
@@ -62,35 +70,11 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @GetMapping("/by_user_name")
+    public String findByName(@PathVariable("name") String name) {
+        User user = userService.getUserByName(name);
 
-
-    @GetMapping("/")
-    public String createUserForm(User user){
-        return "admin";
+        return user.getUsername();
     }
 
-//    @PostMapping("/")
-//    public String createUser(User user){
-//        userService.saveUser(user);
-//        return "redirect:/user";
-//    }
-//
-//    @GetMapping("/user-delete/{id}")
-//    public String deleteUser(@PathVariable("id") Long id) {
-//        userService.deleteById(id);
-//        return "redirect:/user";
-//    }
-//
-//    @GetMapping("/user-update/{id}")
-//    public String updateUseForm(@PathVariable("id") Long id, Model model){
-//        User user = userService.findById(id);
-//        model.addAttribute("user", user);
-//        return "admin";
-//    }
-//
-//    @PostMapping("/user-update")
-//    public String updateUser(User user){
-//        userService.saveUser(user);
-//        return "redirect:/user";
-//    }
 }

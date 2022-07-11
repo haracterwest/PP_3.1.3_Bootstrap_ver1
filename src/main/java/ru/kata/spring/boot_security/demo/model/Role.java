@@ -5,6 +5,13 @@ import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
 import java.util.Set;
 
+/** @Entity - аннотация, связывающая сущность Entity (POJO-класс) с БД, указывается над классом;
+ *  @Table - указывает на имя таблицы, которая будет отображаться в этой сущности, указывается над классом;
+ *  @Id - аннотация, оопределяющая primary key в entity bean;
+ *  @Column - аннотация, которая используется для определения соответствия между атрибутами в классе сущности и полями в таблице данных;
+ *  @GeneratedValue - задает стратегию создания основных ключей;
+ */
+
 @Entity
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
@@ -59,6 +66,5 @@ public class Role implements GrantedAuthority {
     public String getAuthority() {
         return role;
     }
-
 
 }
