@@ -19,7 +19,6 @@ import java.util.Optional;
  */
 
 @Service
-@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -30,14 +29,14 @@ public class UserService {
     }
 
     public User findById(Long id) {
-
-        return userRepository.getOne(id);
+        return userRepository.findById(id).get();
     }
 
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    @Transactional
     public User saveUser(User user) {
 
         String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
@@ -45,6 +44,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public void updateUser(User oldU, User newU) {
         Optional<User> oUser = Optional.of(newU);
         oUser.get().setPassword(oldU.getPassword());
@@ -54,6 +54,7 @@ public class UserService {
         userRepository.save(oUser.get());
     }
 
+    @Transactional
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
