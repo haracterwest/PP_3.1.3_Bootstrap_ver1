@@ -18,13 +18,14 @@ import ru.kata.spring.boot_security.demo.model.User;
 
 @Service
 @Transactional
-public class UserDetailsServiceImpl implements UserDetailsService {
+//создание класса с реализацией интерфейса
+    public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {   //метод для обработки исключения
         User user = userService.getUserByName(username);
         if (user == null) {
             throw new UsernameNotFoundException(String.format("пользователь с именем '%s' не найден ", username));

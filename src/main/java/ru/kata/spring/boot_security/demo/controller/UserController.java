@@ -29,10 +29,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    //метод контроллера, который складывает значения в модель и возвращает шаблон "user"
     @GetMapping()
-    public String getUserPage(Model model, Principal principal) {
-        User user = userService.getUserByName(principal.getName());
-        model.addAttribute("user", user);
-        return "user";
+    public String getUserPage(Model model, Principal principal) {       //текущий юзер, содержится в объекте principal
+        User user = userService.getUserByName(principal.getName());     //возвращает юзера по имени
+        model.addAttribute("user", user);                   //возвращает в модель user по ключу "user"
+        return "user";                                                  //возвращает шаблон "user"
     }
 }

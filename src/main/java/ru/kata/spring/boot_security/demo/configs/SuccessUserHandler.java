@@ -13,10 +13,13 @@ import java.util.Set;
 /**
  *  @Component - аннотация позволяет искать бины-сервисы автоматически;
  *  @Override - перед объявлением метода означает, что метод переопределяет объявление метода в базовом классе;
+ *
  */
 
 @Component
 public class SuccessUserHandler implements AuthenticationSuccessHandler {
+
+    //метод опредеяет на какой url перекинет пользователя при входе, в заисимости от роли
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException {
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());

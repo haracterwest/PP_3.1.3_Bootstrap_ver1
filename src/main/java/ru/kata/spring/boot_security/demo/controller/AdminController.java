@@ -16,6 +16,11 @@ import java.util.List;
  * @PostMapping - используется для обработки post-запроса;
  * @PatchMapping - используется для обновления ресурсов;
  * @DeleteMapping - Обрабатывает delete-запросы
+ * @ModelAttribute – это аннотация, которая связывает параметр метода или
+ * возвращаемое значение метода с именованным атрибутом модели, а затем предоставляет его веб-представлению.
+ * @PathVariable - используется для обработки переменных шаблона в
+ * отображении URI запроса и использовать их в качестве параметров метода.
+ *
  */
 
 @Controller
@@ -24,57 +29,64 @@ public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
 
+
     public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
 
+    //метод контроллера, который складывает значения в модель и возвращает шаблон "admin"
     @GetMapping()
     public String getAllUsers(Model model) {
-        List<User> users = userService.findAll();
-        model.addAttribute("users", users);
-        return "admin";
+        List<User> users = userService.findAll();           //возвращает весь список users
+        model.addAttribute("users", users);     //добавляет users по ключу "users"
+        return "admin";                                     // возвращает шаблон "admin"
     }
 
+    //метод контроллера, который складывает значения в модель по Get-запросу "new" и возвращает шаблон "admin/user-create"
     @GetMapping("/new")
     public String addUser(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("allroles", roleService.getRoles());
-        return "admin/user-create";
+        model.addAttribute("user", new User());                     //добавляет нового user по ключу "user"
+        model.addAttribute("allroles", roleService.getRoles());     //возвращает роль из списка по ключу "allroles"
+        return "admin/user-create";                                             //возвращает шаблон "admin/user-create"
     }
 
+    //метод котнтроллера, который по Post-запросу сохранает юзера, пришедшего с представления
     @PostMapping()
-    public String create(@ModelAttribute("user") User user) {
-        userService.saveUser(user);
-        return "redirect:/admin";
+    public String create(@ModelAttribute("user") User user) {   //принимает атрибут модели по ключу "user"
+        userService.saveUser(user);                             //сохраняет юзера
+        return "redirect:/admin";                               //направляет на юрл /admin
     }
 
-    @GetMapping(value = "/{id}/edit")
-    public String edit(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("user", userService.findById(id));
-        return "admin/user-edit";
+    //метод контроллера, который по Get-запросу выдает юзера с определённым id
+    @GetMapping(value = "/{id}/edit")                                   //в запросе указываем значение {id}, которое связано с параметром метода ("id")
+    public String edit(Model model, @PathVariable("id") Long id) {         //по значению "id" из url кладем в переменную Long id
+        model.addAttribute("user", userService.findById(id));   //ищем юзера по "id", кладём в модель
+        return "admin/user-edit";                                           // возвращает шаблон "admin/user-edit"
     }
 
-    @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
-        User newU = userService.findById(id);
+    //метод контроллера, который обновляет данные модели юзера
+    @PatchMapping("/{id}")      //в запросе указываем значение {id}, которое связано с параметром метода ("id")
+    public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id) {  //по значению "id" из url кладем в переменную Long id, передаём атрибут модели по ключу "user"
+        User newU = userService.findById(id);      //ищем юзера по "id", кладём в переменную newU
 
-        userService.updateUser(user, newU);
+        userService.updateUser(user, newU);          //меняем все поля старого юзера на новые
 
-        return "redirect:/admin";
+        return "redirect:/admin";                   //направляет на юрл /admin
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") Long id) {
-        userService.deleteById(id);
-        return "redirect:/admin";
+    //метод удаляет по id
+    @DeleteMapping("/{id}")                               //в запросе указываем значение {id}, которое связано с параметром метода ("id")
+    public String delete(@PathVariable("id") Long id) {     //по значению "id" из url кладем в переменную Long id
+        userService.deleteById(id);                         //удаляет по id
+        return "redirect:/admin";                           //направляет на юрл /admin
     }
 
-    @GetMapping("/by_user_name")
-    public String findByName(@PathVariable("name") String name) {
-        User user = userService.getUserByName(name);
+    //метод, который ищет юзера по имени
+    @GetMapping("/by_user_name")        //
+    public String findByName(@PathVariable("name") String name) {   //по значению "name" из url кладем в переменную String name
+        User user = userService.getUserByName(name);                //возвращает name, кладём в переменную user
 
-        return user.getUsername();
+        return user.getUsername();                                  //возвращает user
     }
-
 }

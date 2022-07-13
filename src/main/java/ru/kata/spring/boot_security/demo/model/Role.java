@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -10,16 +11,23 @@ import java.util.Set;
  *  @Id - аннотация, оопределяющая primary key в entity bean;
  *  @Column - аннотация, которая используется для определения соответствия между атрибутами в классе сущности и полями в таблице данных;
  *  @GeneratedValue - задает стратегию создания основных ключей;
+ *  @Override - перед объявлением метода означает, что метод переопределяет объявление метода в базовом классе;
+ *  @Transient - указывает, что свойство не нужно записывать. Значения под этой аннотацией не записываются
+ *  в базу данных (также не участвуют в сериализации). static и final переменные экземпляра всегда transient.
+ *  @ManyToMany - определяет атрибут-коллекцию ссылок на сущность с типом ассоциации много-ко-многим
+ *  (Ассоциация много-ко-многим всегда имеет ведущую сторону и может иметь обратную сторону - ведомую.
+ *  На ведущей стороне указывается дополнительная аннотация @JoinTable, на ведомой стороне - параметр mappedBy).
+ *
  */
 
-@Entity
-@Table(name = "roles")
-public class Role implements GrantedAuthority {
-    @Id
-    @Column(name = "role_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+@Entity
+@Table(name = "roles")                              //создание таблицы
+public class Role implements GrantedAuthority {     //класс Role реализует интерфейс GrantedAuthority
+    @Id
+    @Column(name = "role_id")                               //определение соответствия в между name и "role_id"
+    @GeneratedValue(strategy = GenerationType.IDENTITY)     //генерация первичнго ключа, используя стратегию .IDENTITY
+    private Long id;
     private String role;
 
 
@@ -35,7 +43,7 @@ public class Role implements GrantedAuthority {
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
-    public Role() {
+    public Role() {     //пустой конструктор - условие Entity
     }
 
     public Long getId() {
@@ -47,22 +55,22 @@ public class Role implements GrantedAuthority {
     }
 
     @Override
-    public String toString() {
+    public String toString() {                          //замена элемента типа String
         role
                 .replace("[", "")
                 .replace("]", "");
-        return role;
+        return role;                                    //возвращает role с учётом замены
 
     }
 
-    public String getRole() {
+    public String getRole() {                           //замена элемента типа String
         return role.replace("[", "")
                 .replace("]", "");
 
     }
 
 
-    @Override
+    @Override                           //переопределение интерфейса с возвращением role
     public String getAuthority() {
         return role;
     }

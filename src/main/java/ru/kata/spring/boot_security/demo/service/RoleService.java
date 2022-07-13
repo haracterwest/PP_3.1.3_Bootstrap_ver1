@@ -10,15 +10,17 @@ import java.util.ArrayList;
  */
 
 @Service
+
+//класс, формирующий роли
 public class RoleService {
 
     public RoleService() {
     }
 
     public ArrayList<String> getRoles() {
-        ArrayList<String> list = new ArrayList<>();
-        list.add("ROLE_ADMIN");
-        list.add("ROLE_USER");
-        return list;
+        ArrayList<String> list = new ArrayList<>();     //создание списка
+        list.add("ROLE_ADMIN");                         //добавление роли ROLE_ADMIN
+        list.add("ROLE_USER");                          //добавление роли ROLE_USER
+        return list;                                    //возврат списка
     }
 }

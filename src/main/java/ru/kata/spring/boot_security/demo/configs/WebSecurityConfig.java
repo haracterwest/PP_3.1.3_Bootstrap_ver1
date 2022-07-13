@@ -20,6 +20,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  *  @Autowired - отмечает конструктор, поле или метод как требующий автозаполнения инъекцией зависимости;
  *  @Bean - идентификатор бина;
  *  @Override - перед объявлением метода означает, что метод переопределяет объявление метода в базовом классе;
+ *
+ *  конфиги спринг-секьюрити
  */
 
 
@@ -28,16 +30,17 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
-    public WebSecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, SuccessUserHandler successUserHandler) {
+    public WebSecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
+    //конфиг спринг секьюрити: устанавливаем userDetailsService и passwordEncoder
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-
+    // метод, который возвращает бин authenticationProvider
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -46,16 +49,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
 
-
+    //конфиг спринг секьюрити: устанавливаем authenticationProvider
     @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+    public void configure(AuthenticationManagerBuilder auth)  {
         auth.authenticationProvider(authenticationProvider());
     }
 
+    //конфиг спринг секьюрити:
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
+        //стандартная форма логина
         http.formLogin()
+                //устанавливаем в конфиги SuccessUserHandler, чтобы настроить логику при аутентификации
                 .successHandler(new SuccessUserHandler())
                 .usernameParameter("j_username")
                 .passwordParameter("j_password")
@@ -65,13 +70,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout()
                 .permitAll()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                //юрл при логауте
                 .logoutSuccessUrl("/login")
                 .and().csrf().disable();
 
         http
                 .authorizeRequests()
+                //разрешаем неавторизованным пользователям заходить только на /login
                 .antMatchers("/login").anonymous()
+                //разрешаем пользователям с роль ADMIN заходить на юрл, которые начинаются на admin
                 .antMatchers("/admin/**").hasAnyRole("ADMIN")
+                //разрешаем пользователям с ролью USER или ADMIN заходить на юрл, которые начинаются на user
                 .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
                 .and().csrf().disable();
     }

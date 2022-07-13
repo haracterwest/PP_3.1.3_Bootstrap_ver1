@@ -16,7 +16,9 @@ import java.util.stream.Collectors;
  *  @Id - аннотация, оопределяющая primary key в entity bean;
  *  @Column - аннотация, которая используется для определения соответствия между атрибутами в классе сущности и полями в таблице данных;
  *  @GeneratedValue - задает стратегию создания основных ключей;
- *  @ManyToMany - связь многие ко многим;
+ *  @ManyToMany - определяет атрибут-коллекцию ссылок на сущность с типом ассоциации много-ко-многим
+ *  (Ассоциация много-ко-многим всегда имеет ведущую сторону и может иметь обратную сторону - ведомую.
+ *  На ведущей стороне указывается дополнительная аннотация @JoinTable, на ведомой стороне - параметр mappedBy).
  *  @JoinTable - указывает на связь с таблицей;
  *  @JoinColumn - применяется, когда внешний ключ находится в одной из сущностей. Может применяться с обеих сторон взаимосвязи;
  *  @Override - перед объявлением метода означает, что метод переопределяет объявление метода в базовом классе;
@@ -25,11 +27,11 @@ import java.util.stream.Collectors;
 
 @Data
 @Entity
-@Table(name = "users")
-public class User implements UserDetails {
+@Table(name = "users")                          //создание таблицы
+public class User implements UserDetails {      //класс User реализует интерфейс UserDetails
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)     //генерация первичнго ключа, используя стратегию .IDENTITY
     private Long id;
 
     @Column(name = "name")
@@ -41,7 +43,7 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)      //применение аннотации ассоциацией соответствующих полей ведущей стороны @JoinTable
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),

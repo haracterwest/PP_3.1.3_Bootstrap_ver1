@@ -19,25 +19,25 @@ import java.util.Optional;
  */
 
 @Service
-public class UserService {
+public class UserService {      //формирование класса UserService
 
     private final UserRepository userRepository;
 
-    @Autowired
+    @Autowired      //необходимо автозаполнение инъекцией зависимости конструктора UserService
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User findById(Long id) {
-        return userRepository.findById(id).get();
+    public User findById(Long id) {     //метод поиска по id
+        return userRepository.findById(id).get();   //возврат по id
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<User> findAll() {       //метод формирования списка всех зеров
+        return userRepository.findAll();    //возврат всех юзерв из репозитормя
     }
 
     @Transactional
-    public User saveUser(User user) {
+    public User saveUser(User user) {       //создание нового юзера + пароль
 
         String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(encodedPassword);
@@ -45,7 +45,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(User oldU, User newU) {
+    public void updateUser(User oldU, User newU) {      //изменение данных юзера
         Optional<User> oUser = Optional.of(newU);
         oUser.get().setPassword(oldU.getPassword());
         oUser.get().setEmail(oldU.getEmail());
@@ -55,11 +55,11 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(Long id) {       //удаление юзера по id
         userRepository.deleteById(id);
     }
 
-    public User getUserByName(String name) {
+    public User getUserByName(String name) {    //поиск по имени
         return userRepository.getUserByName(name);
     }
 }
