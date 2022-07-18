@@ -1,12 +1,13 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
 
 /**
- *  @Service - аннотация, объявляющая, что этот класс представляет собой сервис – компонент сервис-слоя.
+ *  Service - аннотация, объявляющая, что этот класс представляет собой сервис – компонент сервис-слоя.
  */
 
 @Service
@@ -17,6 +18,7 @@ public class RoleService {
     public RoleService() {
     }
 
+    @Transactional
     public ArrayList<String> getRoles() {
         ArrayList<String> list = new ArrayList<>();     //создание списка
         list.add("ROLE_ADMIN");                         //добавление роли ROLE_ADMIN
