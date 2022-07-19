@@ -9,21 +9,22 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 
 /**
- *  @Service - аннотация, объявляющая, что этот класс представляет собой сервис – компонент сервис-слоя.
- *  @Transactional - перед исполнением метода помеченного данной аннотацией начинается транзакция,
+ *  Service - аннотация, объявляющая, что этот класс представляет собой сервис – компонент сервис-слоя.
+ *  Transactional - перед исполнением метода помеченного данной аннотацией начинается транзакция,
  *  после выполнения метода транзакция коммитится, при выбрасывании RuntimeException откатывается.
- *  @Autowired - отмечает конструктор, поле или метод как требующий автозаполнения инъекцией зависимости;
- *  @Override - перед объявлением метода означает, что метод переопределяет объявление метода в базовом классе;
+ *  Autowired - отмечает конструктор, поле или метод как требующий автозаполнения инъекцией зависимости;
+ *  Override - перед объявлением метода означает, что метод переопределяет объявление метода в базовом классе;
  */
 
 @Service
-@Transactional
+
 //создание класса с реализацией интерфейса
     public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserService userService;
 
+    @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {   //метод для обработки исключения
         User user = userService.getUserByName(username);
