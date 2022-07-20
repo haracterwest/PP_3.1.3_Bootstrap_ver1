@@ -29,7 +29,6 @@ public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
 
-
     public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
@@ -69,9 +68,7 @@ public class AdminController {
     @PatchMapping("/{id}")      //в запросе указываем значение {id}, которое связано с параметром метода ("id")
     public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id) {  //по значению "id" из url кладем в переменную Long id, передаём атрибут модели по ключу "user"
         User newU = userService.findById(id);      //ищем юзера по "id", кладём в переменную newU
-
         userService.updateUser(user, newU);          //меняем все поля старого юзера на новые
-
         return "redirect:/admin";                   //направляет на юрл /admin
     }
 
@@ -86,7 +83,6 @@ public class AdminController {
     @GetMapping("/by_user_name")        //
     public String findByName(@PathVariable("name") String name) {   //по значению "name" из url кладем в переменную String name
         User user = userService.getUserByName(name);                //возвращает name, кладём в переменную user
-
         return user.getUsername();                                  //возвращает user
     }
 }
