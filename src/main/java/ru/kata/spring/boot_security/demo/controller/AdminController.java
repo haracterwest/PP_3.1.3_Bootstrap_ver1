@@ -29,6 +29,7 @@ public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
 
+
     public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
@@ -52,24 +53,27 @@ public class AdminController {
 
     //метод котнтроллера, который по Post-запросу сохранает юзера, пришедшего с представления
     @PostMapping()
-    public String create(@ModelAttribute("user") User user) {   //принимает атрибут модели по ключу "user"
-        userService.saveUser(user);                             //сохраняет юзера
-        return "redirect:/admin";                               //направляет на юрл /admin
+    public String create(@ModelAttribute("user") User user, @RequestParam("rolesList") String[] selectedRoles) {
+        userService.saveUser(user, selectedRoles);
+        return "redirect:/admin";
     }
-
     //метод контроллера, который по Get-запросу выдает юзера с определённым id
     @GetMapping(value = "/{id}/edit")                                   //в запросе указываем значение {id}, которое связано с параметром метода ("id")
-    public String edit(Model model, @PathVariable("id") Long id) {         //по значению "id" из url кладем в переменную Long id
-        model.addAttribute("user", userService.findById(id));   //ищем юзера по "id", кладём в модель
+    public String edit(Model model, @PathVariable("id") Long id) {
+        User user = userService.findById(id);//по значению "id" из url кладем в переменную Long id
+        model.addAttribute("user", user);
+        model.addAttribute("userRoles", roleService.getRoles());//ищем юзера по "id", кладём в модель
         return "admin/user-edit";                                           // возвращает шаблон "admin/user-edit"
     }
 
     //метод контроллера, который обновляет данные модели юзера
-    @PatchMapping("/{id}")      //в запросе указываем значение {id}, которое связано с параметром метода ("id")
-    public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id) {  //по значению "id" из url кладем в переменную Long id, передаём атрибут модели по ключу "user"
-        User newU = userService.findById(id);      //ищем юзера по "id", кладём в переменную newU
-        userService.updateUser(user, newU);          //меняем все поля старого юзера на новые
-        return "redirect:/admin";                   //направляет на юрл /admin
+    @PatchMapping("/{id}")
+    public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id, @RequestParam("rolesList") String[] selectedRoles) {
+        User newU = userService.findById(id);
+
+        userService.updateUser(user, newU, selectedRoles);
+
+        return "redirect:/admin";
     }
 
     //метод удаляет по id
@@ -83,6 +87,7 @@ public class AdminController {
     @GetMapping("/by_user_name")        //
     public String findByName(@PathVariable("name") String name) {   //по значению "name" из url кладем в переменную String name
         User user = userService.getUserByName(name);                //возвращает name, кладём в переменную user
+
         return user.getUsername();                                  //возвращает user
     }
 }

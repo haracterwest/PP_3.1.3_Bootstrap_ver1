@@ -44,12 +44,11 @@ public class User implements UserDetails {      //класс User реализу
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)      //применение аннотации ассоциацией соответствующих полей ведущей стороны @JoinTable
+
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"))
     private Set<Role> roles;
 
 

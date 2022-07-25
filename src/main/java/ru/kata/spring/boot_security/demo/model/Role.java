@@ -29,6 +29,7 @@ public class Role implements GrantedAuthority {     //класс Role реали
     @Column(name = "role_id")                               //определение соответствия в между name и "role_id"
     @GeneratedValue(strategy = GenerationType.IDENTITY)     //генерация первичнго ключа, используя стратегию .IDENTITY
     private Long id;
+
     private String role;
 
 
@@ -40,9 +41,6 @@ public class Role implements GrantedAuthority {     //класс Role реали
         this.role = role;
     }
 
-    @Transient
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
 
     public Role() {     //пустой конструктор - условие Entity
     }
@@ -81,11 +79,11 @@ public class Role implements GrantedAuthority {     //класс Role реали
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Role role1 = (Role) o;
-        return Objects.equals(getId(), role1.getId()) && Objects.equals(getRole(), role1.getRole()) && Objects.equals(users, role1.users);
+        return Objects.equals(getId(), role1.getId()) && Objects.equals(getRole(), role1.getRole());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getRole(), users);
+        return Objects.hash(getId(), getRole());
     }
 }

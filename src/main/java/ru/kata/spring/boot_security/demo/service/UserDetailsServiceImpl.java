@@ -21,8 +21,20 @@ import ru.kata.spring.boot_security.demo.model.User;
 //создание класса с реализацией интерфейса
     public class UserDetailsServiceImpl implements UserDetailsService {
 
+    //конструктор вместо:
+
+    //@Autowired
+    //private UserService userService;
+
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserDetailsServiceImpl(UserService userService) {
+        this.userService = userService;
+    }
+
+
+
 
     @Transactional
     @Override

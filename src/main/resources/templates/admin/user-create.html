@@ -35,10 +35,11 @@
     <br/>
 
 
-    <label for="roles">Введите роли: </label>
-    <select id="roles" name="roleList" class="form-control"
-            multiple size="2" th:field="*{roles}">
+    <label for="rolesList">Введите роли: </label>
+    <select id="rolesList" name="rolesList" class="form-control"
+            multiple size="2" >
 
+        <!— th:field="*{roles}"-->
         <option th:each="role : ${allroles}"
                 th:value="${role}"
                 th:text="${role}">

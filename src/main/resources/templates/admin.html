@@ -11,7 +11,7 @@
 <div>
     <table border="4">
         <tr>
-            <th>ID</th>
+            <th>EDIT</th>
             <th>Имя пользователя</th>
             <th>e-mail</th>
             <th>Пароль</th>
@@ -19,7 +19,15 @@
             <th>Удалить</th>
         </tr>
         <tr th:each="usr : ${users}">
-            <td><a th:href="@{/admin/{id}/edit(id=${usr.getId()})}" th:utext="${usr.getId()}">Id</a></td>
+           <td>
+               <form th:method="GET" th:action="@{/admin/{id}/edit(id=${usr.getId()})}">
+                   <input type="submit" value="EDIT"/>
+               </form>
+
+        </td>
+
+
+
 
             <td th:utext="${usr.getName()}">...</td>
             <td th:utext="${usr.getEmail()}">...</td>
