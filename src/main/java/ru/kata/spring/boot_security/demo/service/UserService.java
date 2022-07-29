@@ -60,6 +60,7 @@ public class UserService {      //формирование класса UserServ
         oUser.get().setPassword(oldU.getPassword());
         oUser.get().setEmail(oldU.getEmail());
         oUser.get().setName(oldU.getName());
+        oUser.get().setAge(oldU.getAge());
         Set<Role> roles = new HashSet<>();
         Arrays.stream(selecedRoles)
                 .forEach(a -> roles.add(rolesRepository.findRoleByRole(a)));

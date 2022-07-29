@@ -7,6 +7,7 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -37,9 +38,15 @@ public class AdminController {
 
     //метод контроллера, который складывает значения в модель и возвращает шаблон "admin"
     @GetMapping()
-    public String getAllUsers(Model model) {
-        List<User> users = userService.findAll();           //возвращает весь список users
-        model.addAttribute("users", users);     //добавляет users по ключу "users"
+    public String getAllUsers(Model model, Principal principal) {
+        List<User> users = userService.findAll();
+        User newU = new User();
+        User user = userService.getUserByName(principal.getName());//возвращает весь список users
+        model.addAttribute("users", users);
+        model.addAttribute("user", newU);
+        model.addAttribute("currentUser", user);
+        model.addAttribute("allroles", roleService.getRoles());
+
         return "admin";                                     // возвращает шаблон "admin"
     }
 
@@ -48,7 +55,7 @@ public class AdminController {
     public String addUser(Model model) {
         model.addAttribute("user", new User());                     //добавляет нового user по ключу "user"
         model.addAttribute("allroles", roleService.getRoles());     //возвращает роль из списка по ключу "allroles"
-        return "admin/user-create";                                             //возвращает шаблон "admin/user-create"
+        return "admin";                                             //возвращает шаблон "admin/user-create"
     }
 
     //метод котнтроллера, который по Post-запросу сохранает юзера, пришедшего с представления
@@ -68,7 +75,7 @@ public class AdminController {
 
     //метод контроллера, который обновляет данные модели юзера
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id, @RequestParam("rolesList") String[] selectedRoles) {
+    public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id, @RequestParam("rolesListedit") String[] selectedRoles) {
         User newU = userService.findById(id);
 
         userService.updateUser(user, newU, selectedRoles);

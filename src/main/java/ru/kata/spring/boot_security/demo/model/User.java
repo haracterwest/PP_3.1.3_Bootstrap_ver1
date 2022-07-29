@@ -44,6 +44,8 @@ public class User implements UserDetails {      //класс User реализу
     @Column(name = "password")
     private String password;
 
+    @Column(name = "age")
+    private Integer age;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(
