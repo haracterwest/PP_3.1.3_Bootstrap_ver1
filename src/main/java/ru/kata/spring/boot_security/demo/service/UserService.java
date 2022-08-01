@@ -57,7 +57,8 @@ public class UserService {      //формирование класса UserServ
     @Transactional
     public void updateUser(User oldU, User newU, String[] selecedRoles) {
         Optional<User> oUser = Optional.of(newU);
-        oUser.get().setPassword(oldU.getPassword());
+        String encodedPassword = new BCryptPasswordEncoder().encode(oldU.getPassword());
+        oUser.get().setPassword(encodedPassword);
         oUser.get().setEmail(oldU.getEmail());
         oUser.get().setName(oldU.getName());
         oUser.get().setAge(oldU.getAge());
